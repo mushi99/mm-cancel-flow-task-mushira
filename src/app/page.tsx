@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import SubscriptionCancellationModal from '../components/SubscriptionCancellationModal';
 
 // Mock user data for UI display
 const mockUser = {
@@ -27,6 +28,9 @@ export default function ProfilePage() {
   
   // New state for settings toggle
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
+  
+  // New state for cancel popup
+  const [showCancelPopup, setShowCancelPopup] = useState(false);
 
   const handleSignOut = async () => {
     setIsSigningOut(true);
@@ -39,6 +43,30 @@ export default function ProfilePage() {
 
   const handleClose = () => {
     console.log('Navigate to jobs');
+  };
+
+  const handleCancelClick = () => {
+    setShowCancelPopup(true);
+  };
+
+  const handleClosePopup = () => {
+    setShowCancelPopup(false);
+  };
+
+
+
+  const handleYesFoundJob = () => {
+    console.log('User found a job');
+    setShowCancelPopup(false);
+    // TODO: Add navigation to success page or handle job found scenario
+    // This could redirect to a feedback form or success page
+  };
+
+  const handleStillLooking = () => {
+    console.log('User still looking for job');
+    setShowCancelPopup(false);
+    // TODO: Add navigation to support page or handle still looking scenario
+    // This could redirect to a support page or feedback form
   };
 
   if (loading) {
@@ -248,9 +276,7 @@ export default function ProfilePage() {
                       <span className="text-sm font-medium">View billing history</span>
                     </button>
                     <button
-                      onClick={() => {
-                        console.log('Cancel button clicked - no action');
-                      }}
+                      onClick={handleCancelClick}
                       className="inline-flex items-center justify-center w-full px-4 py-3 bg-white border border-red-200 text-red-600 rounded-lg hover:bg-red-50 hover:border-red-300 transition-all duration-200 shadow-sm group"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -265,6 +291,14 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
+
+      {/* Subscription Cancellation Modal */}
+      <SubscriptionCancellationModal
+        isOpen={showCancelPopup}
+        onClose={handleClosePopup}
+        onYesFoundJob={handleYesFoundJob}
+        onStillLooking={handleStillLooking}
+      />
     </div>
   );
 }
